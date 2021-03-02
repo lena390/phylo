@@ -26,16 +26,19 @@ int main(int ac, char **av)
 		write(1, "Invalid arguments\n", 18);
 		return (1);
 	}
+	free_forks(&args);
 	return 0;
 }
 
 void init_forks(t_arguments *args)
 {
 	int i;
+	int number_of_mutex;
 
-	args->mutex_array = malloc(sizeof(pthread_mutex_t) * args->number_of_phylo + 1);
+    number_of_mutex = args->number_of_phylo + 2;
+	args->mutex_array = malloc(sizeof(pthread_mutex_t) * number_of_mutex);
 	i = 0;
-	while (i < args->number_of_phylo + 1)
+	while (i < number_of_mutex)
 	{
 		pthread_mutex_init(&args->mutex_array[i], NULL);
 		i++;
@@ -62,12 +65,11 @@ t_arguments **init_phylos(t_arguments *info)
 		args[i]->ttd = info->ttd;
 		args[i]->tte = info->tte;
 		args[i]->tts = info->tts;
-		args[i]->number_of_times_each_phylo_must_eat = info->number_of_times_each_phylo_must_eat;
-
-		args[i]->thread = malloc(sizeof(pthread_t));
+		args[i]->must_eat = info->must_eat;
 		args[i]->one = &info->mutex_array[i];
 		args[i]->two = i + 1 == info->number_of_phylo ? &info->mutex_array[0] : &info->mutex_array[i + 1];
 		args[i]->print = &info->mutex_array[info->number_of_phylo];
+        args[i]->lmt_change = &info->mutex_array[info->number_of_phylo + 1];
 		args[i]->phylo_index = i;
 		args[i]->meals_total = 0;
 		++i;
@@ -78,7 +80,6 @@ t_arguments **init_phylos(t_arguments *info)
 void simulate(t_arguments **args)
 {
 	int i;
-	int status_addr;
 	int dead = 0;
 	size_t	time_start;
 
@@ -86,63 +87,36 @@ void simulate(t_arguments **args)
 	time_start = time_now();
 	while (i < args[0]->number_of_phylo)
 	{
-		args[i]->simulation_start = time_now();
+		args[i]->simulation_start = time_start;
 		args[i]->last_meal_time = args[i]->simulation_start;
-		int result = pthread_create(&args[i]->thread, NULL, hello, args[i]);
+		pthread_create(&args[i]->thread, NULL, hello, args[i]);
 		i++;
 	}
 	i = 0;
 	while (!dead) 
 	{
-		while (i < args[0]->number_of_phylo)
-		{		
-			if (time_now() - args[i]->last_meal_time > args[0]->ttd)
-				{ 
-				    printf("%zu phylo %d is dead (%zu) ttd: %d\n", 
-					time_now() - args[i]->simulation_start, args[i]->phylo_index, time_now() - args[i]->simulation_start, args[0]->ttd);
-					dead = 1;
-    				exit(0);
-				}		
-			i++;
+		while (i < args[0]->number_of_phylo && !dead)
+		{
+            dead = check_if_dead(args[i]);
+            if (args[0]->must_eat != -1)
+                dead = check_meals(args);
+            i++;
 		}
 		i = 0;
 	}
+	free_allocs(args);
 }
 
 void *hello(void *v_args)
 {
-	struct timeval tmp;
-	t_arguments *args = v_args;
+t_arguments *args = v_args;
 	if (args->phylo_index % 2 == 0)
-	 	ft_sleep(50);
+	 	ft_sleep(10);
 	 while (1)
 	 {
-    	pthread_mutex_lock(args->one);
-		// pthread_mutex_lock(args->print);
-		// printf("%ld phylo %d has taken a left fork\n", time_now(), args->phylo_index);
-		// pthread_mutex_unlock(args->print);
-		pthread_mutex_lock(args->two);
-		// pthread_mutex_lock(args->print);
-		// printf("%ld phylo %d has taken two forks\n", time_now(), args->phylo_index);
-		// pthread_mutex_unlock(args->print);
-		args->last_meal_time = time_now();
-		pthread_mutex_lock(args->print);
-		printf("%04ld phylo %d is eating\n", time_now() - args->simulation_start, args->phylo_index);// - simulation start
-		pthread_mutex_unlock(args->print);
-		ft_sleep(args->tte);
-		++args->meals_total;
-		args->last_meal_time = time_now();
-		pthread_mutex_unlock(args->one);
-		pthread_mutex_unlock(args->two);
-
-		pthread_mutex_lock(args->print);
-		printf("%04ld phylo %d is sleeping\n", time_now() - args->simulation_start, args->phylo_index);
-		pthread_mutex_unlock(args->print);
-		ft_sleep(args->tts);
-
-		pthread_mutex_lock(args->print);
-		printf("%04ld phylo %d is thinking\n", time_now() - args->simulation_start, args->phylo_index);
-		pthread_mutex_unlock(args->print);
+	     phylo_eat(args);
+         phylo_sleep(args);
+         phylo_think(args);
 	 }
-	return 0;
+	 return NULL;
 }
