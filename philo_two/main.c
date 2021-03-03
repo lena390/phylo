@@ -37,17 +37,10 @@ int				main(int ac, char **av)
 
 void			init_forks(t_arguments *args)
 {
-	int i;
-	int number_of_mutex;
+	const int	number_of_sem = args->number_of_phylo;
 
-	number_of_mutex = args->number_of_phylo + 2;
-	args->mutex_array = malloc(sizeof(pthread_mutex_t) * number_of_mutex);
-	i = 0;
-	while (i < number_of_mutex)
-	{
-		pthread_mutex_init(&args->mutex_array[i], NULL);
-		i++;
-	}
+	sem_unlink("/name");
+	args->sem = sem_open("/name", O_CREAT, S_IRWXU, number_of_sem);
 }
 
 t_arguments		**init_phylos(t_arguments *info)
@@ -73,13 +66,12 @@ t_arguments		**init_phylos(t_arguments *info)
 
 void			simulate(t_arguments **args)
 {
-	int		i;
-	int		dead;
-	size_t	time_start;
+	int				i;
+	int				dead;
+	const size_t	time_start = time_now();
 
 	dead = 0;
 	i = -1;
-	time_start = time_now();
 	while (++i < args[0]->number_of_phylo)
 	{
 		args[i]->simulation_start = time_start;
@@ -89,14 +81,16 @@ void			simulate(t_arguments **args)
 	i = -1;
 	while (!dead)
 	{
+		usleep(5000);
 		while (++i < args[0]->number_of_phylo && !dead)
 		{
 			dead = check_if_dead(args[i]);
-			if (args[0]->must_eat != -1)
+			if (args[0]->must_eat != -1 && !dead)
 				dead = check_meals(args);
 		}
 		i = 0;
 	}
+	sem_post(args[0]->print);
 	free_allocs(args);
 }
 

@@ -14,29 +14,26 @@
 
 int			check_if_dead(t_arguments *args)
 {
-	int		dead;
-	size_t	check;
+	int				dead;
+	const size_t	check = time_now();
 
 	dead = 0;
-	pthread_mutex_lock(args->lmt_change);
-	if ((unsigned long)args->ttd < (check = time_now()) - args->last_meal_time)
+	if ((unsigned long)args->ttd < check - args->last_meal_time)
 	{
-		pthread_mutex_lock(args->print);
+		sem_wait(args->print);
 		printf("%zu phylo %d is dead\n",
 				check - args->simulation_start, args->phylo_index);
 		dead = 1;
 	}
-	pthread_mutex_unlock(args->lmt_change);
 	return (dead);
 }
 
 int			check_meals(t_arguments **args)
 {
-	int	i;
-	int	checker;
-	int	must_eat;
+	int			i;
+	int			checker;
+	const int	must_eat = args[0]->must_eat;
 
-	must_eat = args[0]->must_eat;
 	i = 0;
 	checker = 1;
 	while (i < args[0]->number_of_phylo && checker == 1)
@@ -47,6 +44,7 @@ int			check_meals(t_arguments **args)
 	}
 	if (checker == 1)
 	{
+		sem_wait(args[0]->print);
 		printf("%zu philosophers are full now\n",
 				time_now() - args[0]->simulation_start);
 	}
@@ -55,14 +53,8 @@ int			check_meals(t_arguments **args)
 
 void		free_forks(t_arguments *args)
 {
-	int i;
-
-	i = -1;
-	while (++i < args->number_of_phylo + 2)
-	{
-		pthread_mutex_destroy(&args->mutex_array[i]);
-	}
-	free(args->mutex_array);
+	sem_close(args->sem);
+	sem_close(args->print);
 }
 
 void		free_allocs(t_arguments **args)
@@ -78,11 +70,9 @@ void		add_info(t_arguments *args, t_arguments *info, int i)
 	args->tte = info->tte;
 	args->tts = info->tts;
 	args->must_eat = info->must_eat;
-	args->one = &info->mutex_array[i];
-	args->two = i + 1 == info->number_of_phylo ?
-		&info->mutex_array[0] : &info->mutex_array[i + 1];
-	args->print = &info->mutex_array[info->number_of_phylo];
-	args->lmt_change = &info->mutex_array[info->number_of_phylo + 1];
+	sem_unlink("/name2");
+	args->print = sem_open("/name2", O_CREAT, S_IRWXU, 1);
 	args->phylo_index = i;
 	args->meals_total = 0;
+	args->sem = info->sem;
 }

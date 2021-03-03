@@ -87,10 +87,11 @@ void			simulate(t_arguments **args)
 	i = -1;
 	while (!dead)
 	{
+		usleep(5000);
 		while (++i < args[0]->number_of_phylo && !dead)
 		{
 			dead = check_if_dead(args[i]);
-			if (args[0]->must_eat != -1)
+			if (args[0]->must_eat != -1 && !dead)
 				dead = check_meals(args);
 		}
 		i = 0;

@@ -41,42 +41,40 @@ void			ft_sleep(unsigned int i)
 
 void			phylo_eat(t_arguments *args)
 {
-	pthread_mutex_lock(args->one);
-	pthread_mutex_lock(args->print);
+	sem_wait(args->sem);
+	sem_wait(args->print);
 	printf("%ld phylo %d has taken a left fork\n",
 			time_now() - args->simulation_start, args->phylo_index);
-	pthread_mutex_unlock(args->print);
-	pthread_mutex_lock(args->two);
-	pthread_mutex_lock(args->print);
+	sem_post(args->print);
+	sem_wait(args->sem);
+	sem_wait(args->print);
 	printf("%ld phylo %d has taken two forks\n",
 			time_now() - args->simulation_start, args->phylo_index);
-	pthread_mutex_unlock(args->print);
-	pthread_mutex_lock(args->lmt_change);
+	sem_post(args->print);
 	args->last_meal_time = time_now();
-	pthread_mutex_unlock(args->lmt_change);
-	pthread_mutex_lock(args->print);
+	sem_wait(args->print);
 	printf("%ld phylo %d is eating\n",
 			time_now() - args->simulation_start, args->phylo_index);
-	pthread_mutex_unlock(args->print);
+	sem_post(args->print);
 	ft_sleep(args->tte);
 	++args->meals_total;
-	pthread_mutex_unlock(args->one);
-	pthread_mutex_unlock(args->two);
+	sem_post(args->sem);
+	sem_post(args->sem);
 }
 
 void			phylo_sleep(t_arguments *args)
 {
-	pthread_mutex_lock(args->print);
+	sem_wait(args->print);
 	printf("%ld phylo %d is sleeping\n",
 			time_now() - args->simulation_start, args->phylo_index);
-	pthread_mutex_unlock(args->print);
+	sem_post(args->print);
 	ft_sleep(args->tts);
 }
 
 void			phylo_think(t_arguments *args)
 {
-	pthread_mutex_lock(args->print);
+	sem_wait(args->print);
 	printf("%ld phylo %d is thinking\n",
 			time_now() - args->simulation_start, args->phylo_index);
-	pthread_mutex_unlock(args->print);
+	sem_post(args->print);
 }

@@ -18,6 +18,9 @@
 # include <pthread.h>
 # include "phylo.h"
 # include <sys/time.h>
+# include <fcntl.h>           /* For O_* constants */
+# include <sys/stat.h>        /* For mode constants */
+# include <semaphore.h>
 
 typedef struct		s_arguments
 {
@@ -27,14 +30,11 @@ typedef struct		s_arguments
 	int				tte;
 	int				tts;
 	int				must_eat;
-	pthread_mutex_t	*mutex_array;
+	sem_t			*sem;
 	int				meals_total;
 
 	pthread_t		thread;
-	pthread_mutex_t	*one;
-	pthread_mutex_t	*two;
-	pthread_mutex_t	*print;
-	pthread_mutex_t	*lmt_change;
+	sem_t			*print;
 	int				phylo_index;
 	size_t			last_meal_time;
 	size_t			simulation_start;
@@ -52,12 +52,12 @@ int					check_if_dead(t_arguments *args);
 int					check_meals(t_arguments **args);
 void				free_allocs(t_arguments **args);
 void				free_forks(t_arguments *args);
-t_arguments *parse_args(int ac, char **av, t_arguments *args);
-void simulate();
-int check_values(t_arguments *pArguments);
-void init_forks(t_arguments *args);
-t_arguments **init_phylos(t_arguments *args);
-void *hello(void *v_args);
-void	add_info(t_arguments *args, t_arguments *info, int i);
+t_arguments			*parse_args(int ac, char **av, t_arguments *args);
+void				simulate(t_arguments **args);
+int					check_values(t_arguments *pArguments);
+void				init_forks(t_arguments *args);
+t_arguments			**init_phylos(t_arguments *args);
+void				*hello(void *v_args);
+void				add_info(t_arguments *args, t_arguments *info, int i);
 
 #endif
