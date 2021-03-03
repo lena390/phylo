@@ -14,11 +14,11 @@
 
 int			check_if_dead(t_arguments *args)
 {
-	int		dead;
-	size_t	check;
+	int				dead;
+	const size_t	check = time_now();
 
 	dead = 0;
-	if ((unsigned long)args->ttd < (check = time_now()) - args->last_meal_time)
+	if ((unsigned long)args->ttd < check - args->last_meal_time)
 	{
 		pthread_mutex_lock(args->print);
 		printf("%zu phylo %d is dead\n",
@@ -30,11 +30,10 @@ int			check_if_dead(t_arguments *args)
 
 int			check_meals(t_arguments **args)
 {
-	int	i;
-	int	checker;
-	int	must_eat;
+	int			i;
+	int			checker;
+	const int	must_eat = args[0]->must_eat;
 
-	must_eat = args[0]->must_eat;
 	i = 0;
 	checker = 1;
 	while (i < args[0]->number_of_phylo && checker == 1)

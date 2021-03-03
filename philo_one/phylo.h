@@ -52,7 +52,7 @@ int					check_meals(t_arguments **args);
 void				free_allocs(t_arguments **args);
 void				free_forks(t_arguments *args);
 t_arguments			*parse_args(int ac, char **av, t_arguments *args);
-void				simulate();
+void				simulate(t_arguments **args);
 int					check_values(t_arguments *pArguments);
 void				init_forks(t_arguments *args);
 t_arguments			**init_phylos(t_arguments *args);

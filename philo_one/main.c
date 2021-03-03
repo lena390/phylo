@@ -37,10 +37,9 @@ int				main(int ac, char **av)
 
 void			init_forks(t_arguments *args)
 {
-	int i;
-	int number_of_mutex;
+	int			i;
+	const int	number_of_mutex = args->number_of_phylo + 1;
 
-	number_of_mutex = args->number_of_phylo + 1;
 	args->mutex_array = malloc(sizeof(pthread_mutex_t) * number_of_mutex);
 	i = 0;
 	while (i < number_of_mutex)
@@ -73,13 +72,12 @@ t_arguments		**init_phylos(t_arguments *info)
 
 void			simulate(t_arguments **args)
 {
-	int		i;
-	int		dead;
-	size_t	time_start;
+	int				i;
+	int				dead;
+	const size_t	time_start = time_now();
 
 	dead = 0;
 	i = -1;
-	time_start = time_now();
 	while (++i < args[0]->number_of_phylo)
 	{
 		args[i]->simulation_start = time_start;
