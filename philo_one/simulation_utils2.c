@@ -18,7 +18,6 @@ int			check_if_dead(t_arguments *args)
 	size_t	check;
 
 	dead = 0;
-	pthread_mutex_lock(args->lmt_change);
 	if ((unsigned long)args->ttd < (check = time_now()) - args->last_meal_time)
 	{
 		pthread_mutex_lock(args->print);
@@ -26,7 +25,6 @@ int			check_if_dead(t_arguments *args)
 				check - args->simulation_start, args->phylo_index);
 		dead = 1;
 	}
-	pthread_mutex_unlock(args->lmt_change);
 	return (dead);
 }
 
@@ -58,7 +56,7 @@ void		free_forks(t_arguments *args)
 	int i;
 
 	i = -1;
-	while (++i < args->number_of_phylo + 2)
+	while (++i < args->number_of_phylo + 1)
 	{
 		pthread_mutex_destroy(&args->mutex_array[i]);
 	}
@@ -82,7 +80,6 @@ void		add_info(t_arguments *args, t_arguments *info, int i)
 	args->two = i + 1 == info->number_of_phylo ?
 		&info->mutex_array[0] : &info->mutex_array[i + 1];
 	args->print = &info->mutex_array[info->number_of_phylo];
-	args->lmt_change = &info->mutex_array[info->number_of_phylo + 1];
 	args->phylo_index = i;
 	args->meals_total = 0;
 }

@@ -40,7 +40,7 @@ void			init_forks(t_arguments *args)
 	int i;
 	int number_of_mutex;
 
-	number_of_mutex = args->number_of_phylo + 2;
+	number_of_mutex = args->number_of_phylo + 1;
 	args->mutex_array = malloc(sizeof(pthread_mutex_t) * number_of_mutex);
 	i = 0;
 	while (i < number_of_mutex)

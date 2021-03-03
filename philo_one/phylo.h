@@ -34,7 +34,6 @@ typedef struct		s_arguments
 	pthread_mutex_t	*one;
 	pthread_mutex_t	*two;
 	pthread_mutex_t	*print;
-	pthread_mutex_t	*lmt_change;
 	int				phylo_index;
 	size_t			last_meal_time;
 	size_t			simulation_start;
@@ -52,12 +51,12 @@ int					check_if_dead(t_arguments *args);
 int					check_meals(t_arguments **args);
 void				free_allocs(t_arguments **args);
 void				free_forks(t_arguments *args);
-t_arguments *parse_args(int ac, char **av, t_arguments *args);
-void simulate();
-int check_values(t_arguments *pArguments);
-void init_forks(t_arguments *args);
-t_arguments **init_phylos(t_arguments *args);
-void *hello(void *v_args);
-void	add_info(t_arguments *args, t_arguments *info, int i);
+t_arguments			*parse_args(int ac, char **av, t_arguments *args);
+void				simulate();
+int					check_values(t_arguments *pArguments);
+void				init_forks(t_arguments *args);
+t_arguments			**init_phylos(t_arguments *args);
+void				*hello(void *v_args);
+void				add_info(t_arguments *args, t_arguments *info, int i);
 
 #endif

@@ -51,9 +51,7 @@ void			phylo_eat(t_arguments *args)
 	printf("%ld phylo %d has taken two forks\n",
 			time_now() - args->simulation_start, args->phylo_index);
 	pthread_mutex_unlock(args->print);
-	pthread_mutex_lock(args->lmt_change);
 	args->last_meal_time = time_now();
-	pthread_mutex_unlock(args->lmt_change);
 	pthread_mutex_lock(args->print);
 	printf("%ld phylo %d is eating\n",
 			time_now() - args->simulation_start, args->phylo_index);
