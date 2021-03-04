@@ -10,14 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "phylo.h"
+#include "philo.h"
 
 int			check_values(t_arguments *args)
 {
 	int flag;
 
 	flag = 1;
-	if (args->number_of_phylo < 2)
+	if (args->number_of_philo < 2)
 		flag = 0;
 	if (args->ttd < 1)
 		flag = 0;
@@ -33,7 +33,7 @@ int			check_values(t_arguments *args)
 t_arguments	*parse_args(int ac, char **av, t_arguments *args)
 {
 	args->number_of_args = ac;
-	args->number_of_phylo = ft_atoi(av[1]);
+	args->number_of_philo = ft_atoi(av[1]);
 	args->ttd = ft_atoi(av[2]);
 	args->tte = ft_atoi(av[3]);
 	args->tts = ft_atoi(av[4]);

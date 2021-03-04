@@ -6,11 +6,11 @@
 /*   By: miphigen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 00:00:08 by miphigen          #+#    #+#             */
-/*   Updated: 2021/03/03 00:17:14 by miphigen         ###   ########.fr       */
+/*   Updated: 2021/03/03 20:29:42 by miphigen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "phylo.h"
+#include "philo.h"
 
 int				main(int ac, char **av)
 {
@@ -24,7 +24,7 @@ int				main(int ac, char **av)
 	if (parse_args(ac, av, &args) != NULL)
 	{
 		init_forks(&args);
-		simulate(init_phylos(&args));
+		simulate(init_philos(&args));
 	}
 	else
 	{
@@ -37,26 +37,26 @@ int				main(int ac, char **av)
 
 void			init_forks(t_arguments *args)
 {
-	const int	number_of_sem = args->number_of_phylo;
+	const int	number_of_sem = args->number_of_philo;
 
 	sem_unlink("/name");
 	args->sem = sem_open("/name", O_CREAT, S_IRWXU, number_of_sem);
 }
 
-t_arguments		**init_phylos(t_arguments *info)
+t_arguments		**init_philos(t_arguments *info)
 {
 	t_arguments	**args;
 	int			i;
 
-	args = malloc(sizeof(t_arguments *) * info->number_of_phylo);
+	args = malloc(sizeof(t_arguments *) * info->number_of_philo);
 	i = 0;
-	while (i < info->number_of_phylo)
+	while (i < info->number_of_philo)
 	{
 		args[i] = malloc(sizeof(t_arguments));
 		++i;
 	}
 	i = 0;
-	while (i < info->number_of_phylo)
+	while (i < info->number_of_philo)
 	{
 		add_info(args[i], info, i);
 		++i;
@@ -72,7 +72,7 @@ void			simulate(t_arguments **args)
 
 	dead = 0;
 	i = -1;
-	while (++i < args[0]->number_of_phylo)
+	while (++i < args[0]->number_of_philo)
 	{
 		args[i]->simulation_start = time_start;
 		args[i]->last_meal_time = args[i]->simulation_start;
@@ -81,8 +81,8 @@ void			simulate(t_arguments **args)
 	i = -1;
 	while (!dead)
 	{
-		usleep(5000);
-		while (++i < args[0]->number_of_phylo && !dead)
+		usleep(3000);
+		while (++i < args[0]->number_of_philo && !dead)
 		{
 			dead = check_if_dead(args[i]);
 			if (args[0]->must_eat != -1 && !dead)
@@ -90,7 +90,7 @@ void			simulate(t_arguments **args)
 		}
 		i = 0;
 	}
-	sem_post(args[0]->print);
+	//sem_post(args[0]->print);
 	free_allocs(args);
 }
 
@@ -103,9 +103,9 @@ void			*hello(void *v_args)
 		ft_sleep(10);
 	while (1)
 	{
-		phylo_eat(args);
-		phylo_sleep(args);
-		phylo_think(args);
+        philo_eat(args);
+        philo_sleep(args);
+        philo_think(args);
 	}
 	return (NULL);
 }

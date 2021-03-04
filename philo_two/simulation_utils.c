@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "phylo.h"
+#include "philo.h"
 
 size_t			time_now(void)
 {
@@ -39,7 +39,7 @@ void			ft_sleep(unsigned int i)
 	}
 }
 
-void			phylo_eat(t_arguments *args)
+void			philo_eat(t_arguments *args)
 {
 	sem_wait(args->sem);
 	sem_wait(args->print);
@@ -62,7 +62,7 @@ void			phylo_eat(t_arguments *args)
 	sem_post(args->sem);
 }
 
-void			phylo_sleep(t_arguments *args)
+void			philo_sleep(t_arguments *args)
 {
 	sem_wait(args->print);
 	printf("%ld phylo %d is sleeping\n",
@@ -71,7 +71,7 @@ void			phylo_sleep(t_arguments *args)
 	ft_sleep(args->tts);
 }
 
-void			phylo_think(t_arguments *args)
+void			philo_think(t_arguments *args)
 {
 	sem_wait(args->print);
 	printf("%ld phylo %d is thinking\n",

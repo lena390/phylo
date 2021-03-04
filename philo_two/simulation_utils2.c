@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "phylo.h"
+#include "philo.h"
 
 int			check_if_dead(t_arguments *args)
 {
@@ -25,7 +25,7 @@ int			check_if_dead(t_arguments *args)
 				check - args->simulation_start, args->phylo_index);
 		dead = 1;
 	}
-	return (dead);
+    return (dead);
 }
 
 int			check_meals(t_arguments **args)
@@ -36,7 +36,7 @@ int			check_meals(t_arguments **args)
 
 	i = 0;
 	checker = 1;
-	while (i < args[0]->number_of_phylo && checker == 1)
+	while (i < args[0]->number_of_philo && checker == 1)
 	{
 		if (args[i]->meals_total < must_eat)
 			checker = 0;
@@ -65,7 +65,7 @@ void		free_allocs(t_arguments **args)
 void		add_info(t_arguments *args, t_arguments *info, int i)
 {
 	args->number_of_args = info->number_of_args;
-	args->number_of_phylo = info->number_of_phylo;
+	args->number_of_philo = info->number_of_philo;
 	args->ttd = info->ttd;
 	args->tte = info->tte;
 	args->tts = info->tts;
