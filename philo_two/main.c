@@ -23,7 +23,7 @@ int				main(int ac, char **av)
 	}
 	if (parse_args(ac, av, &args) != NULL)
 	{
-		init_forks(&args);
+		create_sem(&args);
 		simulate(init_philos(&args));
 	}
 	else
@@ -31,16 +31,17 @@ int				main(int ac, char **av)
 		write(1, "Invalid arguments\n", 18);
 		return (1);
 	}
-	free_forks(&args);
 	return (0);
 }
 
-void			init_forks(t_arguments *args)
+void			create_sem(t_arguments *args)
 {
 	const int	number_of_sem = args->number_of_philo;
 
-	sem_unlink("/name");
-	args->sem = sem_open("/name", O_CREAT, S_IRWXU, number_of_sem);
+	sem_unlink("/namee");
+	args->sem = sem_open("/namee", O_CREAT | O_RDWR, S_IRWXU, number_of_sem);
+    sem_unlink("/namee2");
+    args->print = sem_open("/namee2", O_CREAT | O_RDWR, S_IRWXU, 1);
 }
 
 t_arguments		**init_philos(t_arguments *info)
@@ -59,6 +60,7 @@ t_arguments		**init_philos(t_arguments *info)
 	while (i < info->number_of_philo)
 	{
 		add_info(args[i], info, i);
+		args[i]->print = info->print;
 		++i;
 	}
 	return (args);
@@ -90,7 +92,6 @@ void			simulate(t_arguments **args)
 		}
 		i = 0;
 	}
-	//sem_post(args[0]->print);
 	free_allocs(args);
 }
 

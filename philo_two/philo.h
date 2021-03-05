@@ -55,7 +55,7 @@ void				free_forks(t_arguments *args);
 t_arguments			*parse_args(int ac, char **av, t_arguments *args);
 void				simulate(t_arguments **args);
 int					check_values(t_arguments *pArguments);
-void				init_forks(t_arguments *args);
+void				create_sem(t_arguments *args);
 t_arguments			**init_philos(t_arguments *info);
 void				*hello(void *v_args);
 void				add_info(t_arguments *args, t_arguments *info, int i);

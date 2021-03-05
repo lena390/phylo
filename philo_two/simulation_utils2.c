@@ -48,13 +48,9 @@ int			check_meals(t_arguments **args)
 		printf("%zu philosophers are full now\n",
 				time_now() - args[0]->simulation_start);
 	}
-	return (checker);
-}
 
-void		free_forks(t_arguments *args)
-{
-	sem_close(args->sem);
-	sem_close(args->print);
+
+    return (checker);
 }
 
 void		free_allocs(t_arguments **args)
@@ -70,8 +66,6 @@ void		add_info(t_arguments *args, t_arguments *info, int i)
 	args->tte = info->tte;
 	args->tts = info->tts;
 	args->must_eat = info->must_eat;
-	sem_unlink("/name2");
-	args->print = sem_open("/name2", O_CREAT, S_IRWXU, 1);
 	args->phylo_index = i;
 	args->meals_total = 0;
 	args->sem = info->sem;
