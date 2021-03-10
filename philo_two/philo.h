@@ -10,16 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHYLO_H
-# define PHYLO_H
+#ifndef PHILO_H
+# define PHILO_H
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <pthread.h>
 # include "philo.h"
 # include <sys/time.h>
-# include <fcntl.h>           /* For O_* constants */
-# include <sys/stat.h>        /* For mode constants */
+# include <fcntl.h>
+# include <sys/stat.h>
 # include <semaphore.h>
 
 typedef struct		s_arguments
@@ -54,7 +54,7 @@ void				free_allocs(t_arguments **args);
 void				free_forks(t_arguments *args);
 t_arguments			*parse_args(int ac, char **av, t_arguments *args);
 void				simulate(t_arguments **args);
-int					check_values(t_arguments *pArguments);
+int					check_values(t_arguments *arguments);
 void				create_sem(t_arguments *args);
 t_arguments			**init_philos(t_arguments *info);
 void				*hello(void *v_args);

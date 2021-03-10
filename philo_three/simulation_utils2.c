@@ -28,27 +28,19 @@ int			check_if_dead(t_arguments *args)
 	return (dead);
 }
 
-int			check_meals(t_arguments **args)
+int			check_meals(t_arguments *args)
 {
 	int			i;
 	int			checker;
-	const int	must_eat = args[0]->must_eat;
+	const int	must_eat = args->must_eat;
 
 	i = 0;
 	checker = 1;
-	while (i < args[0]->number_of_phylo && checker == 1)
+	if (args->meals_total >= must_eat)
 	{
-		if (args[i]->meals_total < must_eat)
-			checker = 0;
-		++i;
+		return (13);
 	}
-	if (checker == 1)
-	{
-		sem_wait(args[0]->print);
-		printf("%zu philosophers are full now\n",
-				time_now() - args[0]->simulation_start);
-	}
-	return (checker);
+	return (0);
 }
 
 void		free_allocs(t_arguments **args)
@@ -56,7 +48,7 @@ void		free_allocs(t_arguments **args)
 	free(args);
 }
 
-void		add_info(t_arguments *args, t_arguments *info, int i)
+void		add_info(t_arguments *args, t_arguments *info)
 {
 	args->number_of_args = info->number_of_args;
 	args->number_of_phylo = info->number_of_phylo;

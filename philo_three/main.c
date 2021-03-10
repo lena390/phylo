@@ -40,8 +40,8 @@ void			init_forks(t_arguments *args)
 
 	sem_unlink("/name");
 	args->sem = sem_open("/name", O_CREAT, S_IRWXU, number_of_sem);
-    sem_unlink("/name2");
-    args->print = sem_open("/name2", O_CREAT, S_IRWXU, 1);
+	sem_unlink("/name2");
+	args->print = sem_open("/name2", O_CREAT, S_IRWXU, 1);
 }
 
 t_arguments		**init_phylos(t_arguments *info)
@@ -59,7 +59,7 @@ t_arguments		**init_phylos(t_arguments *info)
 	i = 0;
 	while (i < info->number_of_phylo)
 	{
-		add_info(args[i], info, i);
+		add_info(args[i], info);
 		args[i]->print = info->print;
 		++i;
 	}
@@ -69,22 +69,22 @@ t_arguments		**init_phylos(t_arguments *info)
 void			simulate(t_arguments **args)
 {
 	int				i;
-	int				dead;
 	const size_t	time_start = time_now();
+	int				death_status;
+	int				status;
 
 	i = -1;
 	while (++i < args[0]->number_of_phylo)
 	{
-	    args[i]->phylo_index = i;
+		args[i]->phylo_index = i;
 		args[i]->simulation_start = time_start;
 		args[i]->last_meal_time = time_start;
 		args[i]->pid = fork();
 		if (args[i]->pid == 0)
 		{
-			child_routine(args, i);
+			death_status = child_routine(args, i);
 		}
 	}
-	int status;
 	waitpid(-1, &status, 0);
 	kill_processes(args);
 	sem_post(args[0]->print);

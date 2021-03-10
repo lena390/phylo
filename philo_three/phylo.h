@@ -21,9 +21,9 @@
 # include <fcntl.h>
 # include <sys/stat.h>
 # include <semaphore.h>
-#include <sys/types.h>
-#include <signal.h>
-#include <sys/wait.h>
+# include <sys/types.h>
+# include <signal.h>
+# include <sys/wait.h>
 
 typedef struct		s_arguments
 {
@@ -53,17 +53,17 @@ void				phylo_eat(t_arguments *args);
 void				phylo_sleep(t_arguments *args);
 void				phylo_think(t_arguments *args);
 int					check_if_dead(t_arguments *args);
-int					check_meals(t_arguments **args);
+int					check_meals(t_arguments *args);
 void				free_allocs(t_arguments **args);
 void				free_forks(t_arguments *args);
 t_arguments			*parse_args(int ac, char **av, t_arguments *args);
 void				simulate(t_arguments **args);
-int					check_values(t_arguments *pArguments);
+int					check_values(t_arguments *arguments);
 void				init_forks(t_arguments *args);
 t_arguments			**init_phylos(t_arguments *args);
 void				*hello(void *v_args);
-void				add_info(t_arguments *args, t_arguments *info, int i);
-void 				child_routine(t_arguments **args, int i);
+void				add_info(t_arguments *args, t_arguments *info);
+int					child_routine(t_arguments **args, int i);
 void				kill_processes(t_arguments **args);
 
 #endif

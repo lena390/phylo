@@ -25,7 +25,7 @@ int			check_if_dead(t_arguments *args)
 				check - args->simulation_start, args->phylo_index);
 		dead = 1;
 	}
-    return (dead);
+	return (dead);
 }
 
 int			check_meals(t_arguments **args)
@@ -48,9 +48,7 @@ int			check_meals(t_arguments **args)
 		printf("%zu philosophers are full now\n",
 				time_now() - args[0]->simulation_start);
 	}
-
-
-    return (checker);
+	return (checker);
 }
 
 void		free_allocs(t_arguments **args)

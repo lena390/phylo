@@ -40,8 +40,8 @@ void			create_sem(t_arguments *args)
 
 	sem_unlink("/namee");
 	args->sem = sem_open("/namee", O_CREAT | O_RDWR, S_IRWXU, number_of_sem);
-    sem_unlink("/namee2");
-    args->print = sem_open("/namee2", O_CREAT | O_RDWR, S_IRWXU, 1);
+	sem_unlink("/namee2");
+	args->print = sem_open("/namee2", O_CREAT | O_RDWR, S_IRWXU, 1);
 }
 
 t_arguments		**init_philos(t_arguments *info)
@@ -104,9 +104,9 @@ void			*hello(void *v_args)
 		ft_sleep(10);
 	while (1)
 	{
-        philo_eat(args);
-        philo_sleep(args);
-        philo_think(args);
+		philo_eat(args);
+		philo_sleep(args);
+		philo_think(args);
 	}
 	return (NULL);
 }
