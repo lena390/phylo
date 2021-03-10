@@ -18,9 +18,12 @@
 # include <pthread.h>
 # include "phylo.h"
 # include <sys/time.h>
-# include <fcntl.h>           /* For O_* constants */
-# include <sys/stat.h>        /* For mode constants */
+# include <fcntl.h>
+# include <sys/stat.h>
 # include <semaphore.h>
+#include <sys/types.h>
+#include <signal.h>
+#include <sys/wait.h>
 
 typedef struct		s_arguments
 {
@@ -38,6 +41,7 @@ typedef struct		s_arguments
 	int				phylo_index;
 	size_t			last_meal_time;
 	size_t			simulation_start;
+	pid_t			pid;
 
 }					t_arguments;
 
@@ -59,5 +63,7 @@ void				init_forks(t_arguments *args);
 t_arguments			**init_phylos(t_arguments *args);
 void				*hello(void *v_args);
 void				add_info(t_arguments *args, t_arguments *info, int i);
+void 				child_routine(t_arguments **args, int i);
+void				kill_processes(t_arguments **args);
 
 #endif

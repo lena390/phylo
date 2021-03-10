@@ -72,42 +72,21 @@ void			simulate(t_arguments **args)
 	int				dead;
 	const size_t	time_start = time_now();
 
-	dead = 0;
 	i = -1;
 	while (++i < args[0]->number_of_phylo)
 	{
 	    args[i]->phylo_index = i;
 		args[i]->simulation_start = time_start;
-		args[i]->last_meal_time = args[i]->simulation_start;
-		pid_t pid = fork();
-		if (pid < 0)
+		args[i]->last_meal_time = time_start;
+		args[i]->pid = fork();
+		if (args[i]->pid == 0)
 		{
-			printf("fork error\n");
-			exit(pid);
-		}
-		if (pid == 0)
-		{
-			pthread_create(&args[i]->thread, NULL, hello, args[i]);
-			i = -1;
-			while (!dead)
-			{
-				usleep(3000);
-				while (++i < args[0]->number_of_phylo && !dead) {
-                    dead = check_if_dead(args[i]);
-                    if (args[0]->must_eat != -1 && !dead)
-                        dead = check_meals(args);
-                }
-			i = 0;
-			}
-		}
-		else
-		{
-			int state;
-
-			waitpid(pid, &state, 0);
-			exit(9);
+			child_routine(args, i);
 		}
 	}
+	int status;
+	waitpid(-1, &status, 0);
+	kill_processes(args);
 	sem_post(args[0]->print);
 	free_allocs(args);
 }
@@ -125,5 +104,4 @@ void			*hello(void *v_args)
 		phylo_sleep(args);
 		phylo_think(args);
 	}
-	return (NULL);
 }

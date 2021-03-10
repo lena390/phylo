@@ -87,7 +87,7 @@ void			simulate(t_arguments **args)
 	i = -1;
 	while (!dead)
 	{
-		usleep(5000);
+		usleep(3000);
 		while (++i < args[0]->number_of_phylo && !dead)
 		{
 			dead = check_if_dead(args[i]);

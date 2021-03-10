@@ -18,14 +18,12 @@ int			check_if_dead(t_arguments *args)
 	const size_t	check = time_now();
 
 	dead = 0;
-	//printf("check %d %zu\n", args->ttd, check - args->last_meal_time);
 	if ((unsigned long)args->ttd < check - args->last_meal_time)
 	{
 		sem_wait(args->print);
 		printf("%zu phylo %d is dead\n",
-				check - args->simulation_start, args->phylo_index);
+			check - args->simulation_start, args->phylo_index);
 		dead = 1;
-		exit(1);
 	}
 	return (dead);
 }
