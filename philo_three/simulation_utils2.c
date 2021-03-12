@@ -6,7 +6,7 @@
 /*   By: miphigen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 00:26:03 by miphigen          #+#    #+#             */
-/*   Updated: 2021/03/03 00:33:04 by miphigen         ###   ########.fr       */
+/*   Updated: 2021/03/12 15:13:41 by miphigen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,16 @@ int			check_meals(t_arguments *args)
 
 void		free_allocs(t_arguments **args)
 {
+	int i;
+
+	i = 0;
+	while (i < args[0]->number_of_phylo)
+	{
+		free(args[i]);
+		i++;
+	}
 	free(args);
+
 }
 
 void		add_info(t_arguments *args, t_arguments *info)

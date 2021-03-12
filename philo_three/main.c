@@ -6,7 +6,7 @@
 /*   By: miphigen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/03 00:00:08 by miphigen          #+#    #+#             */
-/*   Updated: 2021/03/03 00:17:14 by miphigen         ###   ########.fr       */
+/*   Updated: 2021/03/12 15:00:35 by miphigen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void			simulate(t_arguments **args)
 		if (args[i]->pid == 0)
 		{
 			death_status = child_routine(args, i);
+			exit(9);
 		}
 	}
 	waitpid(-1, &status, 0);
