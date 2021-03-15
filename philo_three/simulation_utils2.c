@@ -68,7 +68,6 @@ void	kill_processes(t_arguments **args)
 		kill(args[i]->pid, SIGKILL);
 	}
 	free(args);
-
 }
 
 int		child_routine(t_arguments **args, int i)
