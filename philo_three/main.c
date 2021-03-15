@@ -70,7 +70,6 @@ void			simulate(t_arguments **args)
 {
 	int				i;
 	const size_t	time_start = time_now();
-	int				death_status;
 	int				status;
 
 	i = -1;
@@ -82,13 +81,13 @@ void			simulate(t_arguments **args)
 		args[i]->pid = fork();
 		if (args[i]->pid == 0)
 		{
-			death_status = child_routine(args, i);
+			child_routine(args, i);
+			exit(0);
 		}
 	}
+	sem_post(args[0]->print);
 	waitpid(-1, &status, 0);
 	kill_processes(args);
-	sem_post(args[0]->print);
-	free_allocs(args);
 }
 
 void			*hello(void *v_args)
